@@ -1,9 +1,11 @@
-require(RBesT); require(shinyjs); require(ggplot2)
+list.of.packages <- c("RBesT", "shinyjs", "memoise", "data.table",
+                      "DT", "shiny", "ggplot2")
+new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
+if(length(new.packages)) install.packages(new.packages, update = TRUE)
 
-require(data.table); require(memoise); require(pwr)
-
-require(DT)
-
+library(RBesT); library(shinyjs); library(ggplot2)
+library(data.table); library(memoise); library(pwr)
+library(DT); library(shiny)
 
 
 ## some gMAP calls below library this option
