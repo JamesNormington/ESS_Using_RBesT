@@ -7,9 +7,7 @@ library(RBesT); library(shinyjs); library(ggplot2)
 library(data.table); library(memoise); library(pwr)
 library(DT); library(shiny)
 
-
 ## some gMAP calls below library this option
-
 options(RBesT.MC.control=list(adapt_delta=0.9999))
 
 
@@ -34,9 +32,9 @@ ui = navbarPage("",
                                                                                         
                                                                                         max = 1)),
                                                           
-                                                          conditionalPanel("input.samp == 'Two'",  numericInput("p1_trt", HTML("<p> Anticipated event rate, treatment group </p>"), value = 0.35, min = 0,
-                                                                                                                
-                                                                                                                max = 1),
+                                                          conditionalPanel("input.samp == 'Two'", numericInput("p1_trt", HTML("<p> Anticipated event rate, treatment group </p>"), value = 0.35, min = 0,
+                                                                                                               
+                                                                                                               max = 1),
                                                                            
                                                                            numericInput("p1_ctrl", HTML("<p> Anticipated event rate, control group </p>"), value = 0.5, min = 0,
                                                                                         
@@ -268,7 +266,7 @@ ui = navbarPage("",
                                                                 
                                                                 `LogNormal` = "LogNormal", `TruncCauchy` = "TruncCauchy",
                                                                 
-                                                                `Exponential` = "Exp", `Fixed`  ="Fixed")),
+                                                                `Exponential` = "Exp", `Fixed` ="Fixed")),
                                         
                                         conditionalPanel("input.tau_dist == 'HalfNormal'", HTML("<p> &tau; ~ HalfNormal(&sigma;) </p>"),
                                                          
@@ -355,33 +353,18 @@ ui = navbarPage("",
                                    htmlOutput("plot_err"),
                                    
                                    htmlOutput("forest_plot_addendum"),
-                                   
                                    tableOutput("MAP_summ"),
-                                   
-                                   textOutput("ESS")
-                                   
+                                   textOutput("ESS"), br(),
+                                   textOutput("ESS.rob")
                          ) # close MainPanel
-                         
                          ) # close SideBarLayout
-                         
-                         
-                         
                          ), # close tabPanel
-                
-                
-                
-                
-                
+
                 tabPanel("Run trial", 
-                         
                          fluidRow(column(3,
-                                         
                                          numericInput("n.new", "Sample size of treatment group", value = 50, min = 1, step = 1),
-                                         
                                          conditionalPanel("input.samp == 'Two'",
-                                                          
                                                           numericInput("n.ctrl", "Sample size of control group", value = 50, min = 1, step = 1)
-                                                          
                                          ),
                                          
                                          conditionalPanel(condition = "input.endpt == 'Binary'",
@@ -434,9 +417,9 @@ ui = navbarPage("",
                                                  
                                                  conditionalPanel("input.endpt == 'Binary'",
                                                                   
-                                                                  conditionalPanel("input.sidedness == 'Lower' & input.samp == 'One'",  HTML("<p> Decision rule: <br>P(p < p<sub>0</sub>) > p<sub>crit</sub> </p>")),
+                                                                  conditionalPanel("input.sidedness == 'Lower' & input.samp == 'One'", HTML("<p> Decision rule: <br>P(p < p<sub>0</sub>) > p<sub>crit</sub> </p>")),
                                                                   
-                                                                  conditionalPanel("input.sidedness == 'Upper' & input.samp == 'One'",  HTML("<p> Decision rule: <br>P(p > p<sub>0</sub>) > p<sub>crit</sub> </p>")),
+                                                                  conditionalPanel("input.sidedness == 'Upper' & input.samp == 'One'", HTML("<p> Decision rule: <br>P(p > p<sub>0</sub>) > p<sub>crit</sub> </p>")),
                                                                   
                                                                   conditionalPanel("input.sidedness == 'Lower' & input.samp == 'Two'", HTML("<p> Decision rule: <br>P(g(p<sub>ctrl</sub>) - g(p<sub>trt</sub>) < &Delta;<sub>0</sub>) > p<sub>crit</sub> </p>")),
                                                                   
@@ -480,9 +463,9 @@ ui = navbarPage("",
                                                  
                                                  conditionalPanel("input.endpt == 'Binary'",
                                                                   
-                                                                  conditionalPanel("input.samp == 'One' & input.sidedness == 'Lower'",  HTML("<p> Decision rules: <br> (1) P(p < p<sub>0</sub>) > p<sub>crit</sub><br> (2) P(p < p<sub>02</sub>) > p<sub>crit2</sub> </p>")),
+                                                                  conditionalPanel("input.samp == 'One' & input.sidedness == 'Lower'", HTML("<p> Decision rules: <br> (1) P(p < p<sub>0</sub>) > p<sub>crit</sub><br> (2) P(p < p<sub>02</sub>) > p<sub>crit2</sub> </p>")),
                                                                   
-                                                                  conditionalPanel("input.samp == 'One' & input.sidedness == 'Upper'",  HTML("<p> Decision rules: <br> (1) P(p > p<sub>0</sub>) > p<sub>crit</sub><br> (2) P(p > p<sub>02</sub>) > p<sub>crit2</sub> </p>")),
+                                                                  conditionalPanel("input.samp == 'One' & input.sidedness == 'Upper'", HTML("<p> Decision rules: <br> (1) P(p > p<sub>0</sub>) > p<sub>crit</sub><br> (2) P(p > p<sub>02</sub>) > p<sub>crit2</sub> </p>")),
                                                                   
                                                                   conditionalPanel("input.samp == 'Two' & input.sidedness == 'Lower'", HTML("<p> Decision rules: <br> (1) P(g(p<sub>ctrl</sub>) - g(p<sub>trt</sub>) < &Delta;<sub>0</sub>) > p<sub>crit</sub><br> (2) P(g(p<sub>ctrl</sub>) - g(p<sub>trt</sub>) < &Delta;<sub>02</sub>) > p<sub>crit2</sub></p>")),
                                                                   
@@ -522,7 +505,7 @@ ui = navbarPage("",
                                                                   
                                                                   conditionalPanel("input.samp == 'One' & input.sidedness == 'Upper'", HTML("<p> Decision rules: <br> (1) P(&lambda; > &lambda;<sub>0</sub>) > p<sub>crit</sub><br> (2) P(&lambda; > &lambda;<sub>02</sub>) > p<sub>crit2</sub> </p>")),
                                                                   
-                                                                  conditionalPanel("input.samp == 'Two' & input.sidedness == 'Lower'", HTML("<p> Decision rules: <br> (1) P(g(&lambda;<sub>ctrl</sub>) - g(&lambda;<sub>trt</sub>) < &Delta;<sub>0</sub>) > p<sub>crit</sub><br> (2)  P(g(&lambda;<sub>ctrl</sub>) - g(&lambda;<sub>trt</sub>) < &Delta;<sub>02</sub>) > p<sub>crit2</sub> </p>")),
+                                                                  conditionalPanel("input.samp == 'Two' & input.sidedness == 'Lower'", HTML("<p> Decision rules: <br> (1) P(g(&lambda;<sub>ctrl</sub>) - g(&lambda;<sub>trt</sub>) < &Delta;<sub>0</sub>) > p<sub>crit</sub><br> (2) P(g(&lambda;<sub>ctrl</sub>) - g(&lambda;<sub>trt</sub>) < &Delta;<sub>02</sub>) > p<sub>crit2</sub> </p>")),
                                                                   
                                                                   conditionalPanel("input.samp == 'Two' & input.sidedness == 'Upper'", HTML("<p> Decision rules: <br> (1) P(g(&lambda;<sub>ctrl</sub>) - g(&lambda;<sub>trt</sub>) > &Delta;<sub>0</sub>) > p<sub>crit</sub><br> (2) P(g(&lambda;<sub>ctrl</sub>) - g(&lambda;<sub>trt</sub>) > &Delta;<sub>02</sub>) > p<sub>crit2</sub> </p>"))
                                                                   
@@ -538,7 +521,7 @@ ui = navbarPage("",
                                 
                                 conditionalPanel("input.endpt == 'Binary' & input.samp == 'Two'", numericInput("diff0_bin", HTML("<p> Null value, &Delta;<sub>0</sub> </p>"), value = 0)),
                                 
-                                conditionalPanel("input.endpt == 'Normal' & input.samp == 'One'", numericInput("mu0", HTML("<p> Null value, &mu;<sub>0</sub> </p>"), value = 18,  min = 0.01, max = 0.99)),
+                                conditionalPanel("input.endpt == 'Normal' & input.samp == 'One'", numericInput("mu0", HTML("<p> Null value, &mu;<sub>0</sub> </p>"), value = 18, min = 0.01, max = 0.99)),
                                 
                                 conditionalPanel("input.endpt == 'Normal' & input.samp == 'Two'", numericInput("diff0_norm", HTML("<p> Null value, &Delta;<sub>0</sub> </p>"), value = 0)),
                                 
@@ -764,7 +747,7 @@ server = function(input, output, session) {
     
     if(input$endpt == "Binary") {
       
-      return(val)  
+      return(val) 
       
     } else if(input$endpt == "Normal") {
       
@@ -786,7 +769,7 @@ server = function(input, output, session) {
       
       t = as.data.frame(rbind(which_val()$mat, c(input$study_add, input$n_add, input$r_add)))
       
-      val$mat <<- t   
+      val$mat <<- t 
       
     } else if(input$endpt == "Normal") {
       
@@ -834,7 +817,7 @@ server = function(input, output, session) {
     
     if(input$endpt == "Binary") {
       
-      val$mat <<- t   
+      val$mat <<- t 
       
     } else if(input$endpt == "Normal") {
       
@@ -1352,7 +1335,7 @@ server = function(input, output, session) {
         
       } else{
         
-        beta.prior =  sd(log(co.data[,3] + 0.5 + log(co.data[,2]*co.data[,4])))
+        beta.prior = sd(log(co.data[,3] + 0.5 + log(co.data[,2]*co.data[,4])))
         
       }
       
@@ -1401,83 +1384,72 @@ server = function(input, output, session) {
   # Function to make forest plot.
   
   makeForest = function() {
-    
-    
-    
     error_check = errCheck()
-    
     if(!is.null(error_check)) return(error_check)
-    
-    
-    
     withProgress(message = "Computing MAP prior...", value = 0.5, {
       
       params = get.params()
-      
       base.MAP.mc = get.gMAP.mem(params$co.data, params$beta.prior, params$tau.prior, params$tau.dist)
-      
       MAP_summ = summary(base.MAP.mc)$theta.pred
       
       rownames(MAP_summ) = "Posterior summary of MAP prior"
-      
-      
-      
       incProgress(amount = 0.25)
-      
       setProgress(message = "Computing parametric approximation...")
       
       base.MAP = automixfit(base.MAP.mc)
-      
-      
-      
-      if(input$method == "ELIR (recommended)") {
+      if(input$wt > 0 & input$wt < 1) {
+        if(input$endpt == "Binary") {
+          robust.mean = ifelse(input$samp == "One", input$p0, 0.5)
+        } else if(input$endpt == "Normal") {
+          robust.mean = ifelse(input$samp == "One", input$mu0, input$diff0_norm)
+        } else{
+          if(input$samp == "One") robust.mean = input$lambda0
+        }
         
-        ESS = ess(base.MAP, method = "elir")
-        
-      } else if(input$method == "Moment") {
-        
-        ESS = ess(base.MAP, method = "moment")
-        
-      } else{
-        
-        ESS = ess(base.MAP, method = "morita")
-        
+        if(input$endpt != "Poisson" | (input$endpt == "Poisson" & input$samp == "One")) {
+          MAP.robust = robustify(base.MAP, weight = input$wt, mean = robust.mean)
+        } else{ # Two-sample Poisson
+          MAP.robust = robustify(base.MAP, weight = input$wt)
+        }
+      } else if(input$wt == 0) {
+        MAP.robust = base.MAP
+      } else {
+        if(input$endpt == "Binary") {
+          MAP.robust = mixbeta(c(1,1,1))
+        } else if(input$endpt == "Normal") {
+          MAP.robust = mixnorm(c(1, robust.mean, 100))
+        } else{
+          MAP.robust = mixgamma(c(1, 0.001, 0.001))
+        }
       }
-      
-      
-      
+      if(input$method == "ELIR (recommended)") {
+        ESS = ess(base.MAP, method = "elir")
+        ESS.rob = ess(MAP.robust, method = "elir")
+      } else if(input$method == "Moment") {
+        ESS = ess(base.MAP, method = "moment")
+        ESS.rob = ess(MAP.robust, method = "moment")
+      } else{
+        ESS = ess(base.MAP, method = "morita")
+        ESS.rob = ess(MAP.robust, method = "morita")
+      }
     })
-    
-    
-    
-    return(list(base.MAP.mc = base.MAP.mc, MAP_summ = MAP_summ, ESS = ESS))
-    
+  
+    return(list(base.MAP.mc = base.MAP.mc, MAP_summ = MAP_summ, ESS = ESS, ESS.rob = ESS.rob))
   } # close makeForest() function
   
-  
-  
   # Call make forest function triggered by action button
-  
   observeEvent(input$make.forest, {
-    
     output$forest = renderPlot({})
-    
-    
-    
     func.output = isolate(makeForest())
     
     if(class(func.output)[1] %in% c("character", "html")) {
-      
       output$plot_err = renderText({func.output})
-      
     } else{
       
       output$forest = renderPlot({
         
         plot(func.output$base.MAP.mc)$forest + theme(legend.position = "right") +
-          
           labs(title=expression("Posterior medians of "*theta[1]*", ..., "*theta[H]*", "*theta*"*"*" with 95% credible intervals"))
-        
       })
       
       output$plot_err = renderText({""})
@@ -1487,13 +1459,13 @@ server = function(input, output, session) {
                                     rownames = TRUE, digits = 3)
       
       output$ESS = renderText({
-        
         paste0("The effective sample size of the MAP prior is ", round(func.output$ESS), ".")
-        
       })
       
+      output$ESS.rob = renderText({
+        paste0("The effective sample size of the MAP prior with robustification is ", round(func.output$ESS.rob), ".")
+      })
     }
-    
   }, ignoreInit = TRUE)
   
   
@@ -1607,13 +1579,7 @@ server = function(input, output, session) {
       incProgress(amount = 0.25)
       
       setProgress(message = "Computing parametric approximation...")
-      
-      
-      
       base.MAP = automixfit(base.MAP.mc)
-      
-      
-      
       if(input$wt > 0 & input$wt < 1) {
         
         if(input$endpt == "Binary") {
@@ -1641,39 +1607,20 @@ server = function(input, output, session) {
         }
         
       } else if(input$wt == 0) {
-        
         MAP.robust = base.MAP
-        
       } else {
-        
         if(input$endpt == "Binary") {
-          
           MAP.robust = mixbeta(c(1,1,1))
-          
         } else if(input$endpt == "Normal") {
-          
           MAP.robust = mixnorm(c(1, robust.mean, 100))
-          
         } else{
-          
           MAP.robust = mixgamma(c(1, 0.001, 0.001))
-          
         }
-        
       }
-      
-      
-      
       incProgress(amount = 0.25)
-      
     }
-    
     )
-    
-    
-    
-    
-    
+  
     # Derive decision rule.
     
     if(samp == "One"){
@@ -1906,7 +1853,7 @@ server = function(input, output, session) {
     
     return(list(success.noH = success.noH, success.H = success.H, prob.H = prob.H[1], prob.noH = prob.noH[1],
                 
-                prob2.H = prob2.H, prob2.noH = prob2.noH,  freq.p = freq.p, freq.p2 = freq.p2,
+                prob2.H = prob2.H, prob2.noH = prob2.noH, freq.p = freq.p, freq.p2 = freq.p2,
                 
                 mix.obj.H = treat.post.H, mix.obj.noH = treat.post.noH,
                 
@@ -2028,9 +1975,9 @@ server = function(input, output, session) {
         
         
         
-        plot.H = plot(func.output$mix.obj.H, comp = FALSE)  + labs(title = expression("Posterior of "*theta*"* using MAP prior")) + xlab(expression(theta*"*")) + stat_function(fun = ~RBesT::dmix(func.output$mix.obj.H, .x), xlim = xlims, geom = "area", alpha = 0.3, aes(fill = "Post. prob., 1st")) + scale_fill_manual("Criteria", values = cols) + geom_vline(aes(xintercept = crit1.H, linetype = "1st criteria")) + scale_linetype_manual("Critical thresholds", values = cols)
+        plot.H = plot(func.output$mix.obj.H, comp = FALSE) + labs(title = expression("Posterior of "*theta*"* using MAP prior")) + xlab(expression(theta*"*")) + stat_function(fun = ~RBesT::dmix(func.output$mix.obj.H, .x), xlim = xlims, geom = "area", alpha = 0.3, aes(fill = "Post. prob., 1st")) + scale_fill_manual("Criteria", values = cols) + geom_vline(aes(xintercept = crit1.H, linetype = "1st criteria")) + scale_linetype_manual("Critical thresholds", values = cols)
         
-        plot.noH = plot(func.output$mix.obj.noH, comp = FALSE)  + xlab(expression(theta*"*")) + labs(title = expression("Posterior of "*theta*"* using non-informative prior")) + stat_function(fun = ~RBesT::dmix(func.output$mix.obj.noH, .x), xlim = xlims, geom = "area", alpha = 0.3, aes(fill="Post. prob., 1st")) + scale_fill_manual("Criteria", values = cols) + geom_vline(aes(xintercept = crit1.noH, linetype = "1st criteria")) + scale_linetype_manual("Critical thresholds", values = cols)
+        plot.noH = plot(func.output$mix.obj.noH, comp = FALSE) + xlab(expression(theta*"*")) + labs(title = expression("Posterior of "*theta*"* using non-informative prior")) + stat_function(fun = ~RBesT::dmix(func.output$mix.obj.noH, .x), xlim = xlims, geom = "area", alpha = 0.3, aes(fill="Post. prob., 1st")) + scale_fill_manual("Criteria", values = cols) + geom_vline(aes(xintercept = crit1.noH, linetype = "1st criteria")) + scale_linetype_manual("Critical thresholds", values = cols)
         
         
         
@@ -2077,191 +2024,92 @@ server = function(input, output, session) {
       
       
       if(input$samp == "Two") {
-        
-        
-        
         if(input$samp == "One"){
           
           if(input$endpt == "Binary") qc1 = input$p0
-          
           if(input$endpt == "Normal") qc1 = input$mu0
-          
           if(input$endpt == "Poisson") qc1 = input$lambda0
           
         } else{
-          
           if(input$endpt == "Binary") qc1 = input$diff0_bin
-          
           if(input$endpt == "Normal") qc1 = input$diff0_norm
-          
           if(input$endpt == "Poisson") {
-            
             qc1 = ifelse(input$link == "identity", input$lambda_ctrl - input$lambda_trt, log(input$lambda_ctrl/input$lambda_trt))
-            
           }
-          
         }
-        
-        
         
         if(input$sidedness == "Lower") {
-          
           xlims = c(qmixdiff(func.output$mix.obj.noH.ctrl, func.output$mix.obj.noH, 0.001), qc1)
-          
           crit1.noH = qmixdiff(func.output$mix.obj.noH.ctrl, func.output$mix.obj.noH, input$pc1)
-          
           crit1.H = qmixdiff(func.output$mix.obj.H.ctrl, func.output$mix.obj.H, input$pc1)
-          
         } else{
-          
           xlims = c(qc1, qmixdiff(func.output$mix.obj.noH.ctrl, func.output$mix.obj.noH, 0.999))
-          
           crit1.noH = qmixdiff(func.output$mix.obj.noH.ctrl, func.output$mix.obj.noH, 1-input$pc1)
-          
           crit1.H = qmixdiff(func.output$mix.obj.H.ctrl, func.output$mix.obj.H, 1-input$pc1)
-          
         }
         
-        
-        
         cols = c("Post. prob., 1st" = "#84CA72", "1st criteria" = "dotted", "Post. prob., 2nd" = "#CA7294", "2nd criteria" = "dashed")
-        
         bounds.H = c(qmixdiff(func.output$mix.obj.H.ctrl, func.output$mix.obj.H, c(0.001, 0.999)))
-        
-        plot.H = ggplot(data.frame(x = bounds.H), aes(x)) + labs(title = expression("Posterior of "*theta*"* using MAP prior")) + xlab(expression(theta*"*")) + stat_function(fun = ~RBesT::dmixdiff(func.output$mix.obj.H.ctrl, func.output$mix.obj.H, .x), xlim = qmixdiff(func.output$mix.obj.H.ctrl, func.output$mix.obj.H, c(0.001, 0.999))) +  stat_function(fun = ~RBesT::dmixdiff(func.output$mix.obj.H.ctrl, func.output$mix.obj.H, .x), xlim = xlims, geom = "area", alpha = 0.3, aes(fill = "Post. prob., 1st")) + scale_fill_manual("Criteria", values = cols) + geom_vline(aes(xintercept = crit1.H, linetype = "1st criteria")) + scale_linetype_manual("Critical thresholds", values = cols)
-        
+        plot.H = ggplot(data.frame(x = bounds.H), aes(x)) + labs(title = expression("Posterior of "*theta*"* using MAP prior")) + xlab(expression(theta*"*")) + stat_function(fun = ~RBesT::dmixdiff(func.output$mix.obj.H.ctrl, func.output$mix.obj.H, .x), xlim = qmixdiff(func.output$mix.obj.H.ctrl, func.output$mix.obj.H, c(0.001, 0.999))) + stat_function(fun = ~RBesT::dmixdiff(func.output$mix.obj.H.ctrl, func.output$mix.obj.H, .x), xlim = xlims, geom = "area", alpha = 0.3, aes(fill = "Post. prob., 1st")) + scale_fill_manual("Criteria", values = cols) + geom_vline(aes(xintercept = crit1.H, linetype = "1st criteria")) + scale_linetype_manual("Critical thresholds", values = cols)
         plot.H = plot.H + stat_function(fun = ~dmixdiff(func.output$mix.obj.H.ctrl, func.output$mix.obj.H, .x), xlim = bounds.H)
-        
         bounds.noH = c(qmixdiff(func.output$mix.obj.noH.ctrl, func.output$mix.obj.noH, c(0.001, 0.999)))
-        
         plot.noH = ggplot(data.frame(x = bounds.noH), aes(x)) + xlab(expression(theta*"*")) + labs(title = expression("Posterior of "*theta*"* using non-informative prior")) + stat_function(fun = ~RBesT::dmixdiff(func.output$mix.obj.noH.ctrl, func.output$mix.obj.noH, .x), xlim = xlims, geom = "area", alpha = 0.3, aes(fill="Post. prob., 1st")) + scale_fill_manual("Criteria", values = cols) + geom_vline(aes(xintercept = crit1.noH, linetype = "1st criteria")) + scale_linetype_manual("Critical thresholds", values = cols)
-        
         plot.noH = plot.noH + stat_function(fun = ~dmixdiff(func.output$mix.obj.noH.ctrl, func.output$mix.obj.noH, .x), xlim = bounds.noH)
-        
-        
         
         if(input$ncrit == "Two") {
           
           if(input$endpt == "Binary") qc2 = input$qc2_bin
-          
           if(input$endpt == "Normal") qc2 = input$qc2_norm
-          
           if(input$endpt == "Poisson") qc2 = input$qc2_pois
-          
           if(input$samp == "Two") qc2 = input$qc2
           
-          
-          
           if(input$sidedness == "Lower") {
-            
             xlims2 = c(qmixdiff(func.output$mix.obj.noH.ctrl, func.output$mix.obj.noH, 0.001), qc2)
-            
             crit2.noH = qmixdiff(func.output$mix.obj.noH.ctrl, func.output$mix.obj.noH, input$pc2)
-            
             crit2.H = qmixdiff(func.output$mix.obj.H.ctrl, func.output$mix.obj.H, input$pc2)
-            
           } else{
-            
             xlims2 = c(qc2, qmixdiff(func.output$mix.obj.noH.ctrl, func.output$mix.obj.noH, 0.999))
-            
             crit2.noH = qmixdiff(func.output$mix.obj.noH.ctrl, func.output$mix.obj.noH, 1-input$pc2)
-            
             crit2.H = qmixdiff(func.output$mix.obj.H.ctrl, func.output$mix.obj.H, 1-input$pc2)
-            
           }
-          
           plot.H = plot.H + stat_function(fun = ~RBesT::dmixdiff(func.output$mix.obj.H.ctrl, func.output$mix.obj.H, .x), xlim = xlims2, geom = "area", alpha = 0.3, aes(fill = "Post. prob., 2nd")) + scale_fill_manual("Criteria", values = cols) + geom_vline(aes(xintercept = crit2.H, linetype = "2nd criteria")) + scale_linetype_manual("Critical thresholds", values = cols)
-          
           plot.noH = plot.noH + stat_function(fun = ~RBesT::dmixdiff(func.output$mix.obj.noH.ctrl, func.output$mix.obj.noH, .x), xlim = xlims2, geom = "area", alpha = 0.3, aes(fill = "Post. prob., 2nd")) + scale_fill_manual("Criteria", values = cols) + geom_vline(aes(xintercept = crit2.noH, linetype = "2nd criteria")) + scale_linetype_manual("Critical thresholds", values = cols)
-          
         }
-        
-        
-        
       }
-      
-      
-      
       output$mixplot.H = renderPlot({
-        
         plot.H
-        
       })
-      
-      
       
       output$mixplot.noH = renderPlot({
-        
         plot.noH
-        
       })
-      
-      
-      
-      
-      
     }
-    
-    
-    
-    
-    
   }, ignoreInit = TRUE)
-  
-  
-  
+
   URL0 = a("Click here for a walkthrough of this Shiny app (Chrome or Firefox only).", href = "https://github.com/JamesNormington/ESS_Using_RBesT/blob/master/ESS%20App%20Walkthrough.pdf")
-  
   output$link0 = renderUI({
-    
     tagList(URL0)
-    
   })
-  
-  
   
   URL1 = a("Click here for a walkthrough of the methodology and code (Chrome or Firefox only).", href = "https://github.com/JamesNormington/ESS_Using_RBesT/blob/master/ESS%20Code%20and%20Methodology%20Walkthrough.pdf")
-  
   output$link1 = renderUI({
-    
     tagList(URL1)
-    
   })
-  
-  
   
   URL2 = a("Click here for Yue Li's walkthrough of RBesT for a normal endpoint, including ESS calculation.", href = "https://cran.r-project.org/web/packages/RBesT/vignettes/introduction_normal.html")
-  
   output$link2 = renderUI({
-    
     tagList(URL2)
-    
   })
-  
-  
   
   URL3 = a("Click here for RBesT documentation on CRAN.", href = "https://cran.r-project.org/web/packages/RBesT/RBesT.pdf")
-  
   output$link3 = renderUI({
-    
     tagList(URL3)
-    
   })
-  
-  
   
   URL4 = a("Click here for Sebastian Weber et al.'s RBesT paper on arXiv.", href = "https://arxiv.org/pdf/1907.00603.pdf")
-  
   output$link4 = renderUI({
-    
     tagList(URL4)
-    
   })
-  
-  
-  
+
 } # close server() function
-
-
-
 shinyApp(ui, server)
