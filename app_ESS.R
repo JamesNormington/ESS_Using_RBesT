@@ -1,5 +1,5 @@
 list.of.packages <- c("RBesT", "shinyjs", "memoise", "data.table",
-                      "DT", "shiny", "ggplot2")
+                      "DT", "shiny", "ggplot2", "pwr")
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages, update = TRUE)
 
