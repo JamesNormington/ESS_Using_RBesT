@@ -910,75 +910,42 @@ server = function(input, output, session) {
   meta.data = reactive({
     
     if(input$endpt == "Binary") {
-      
       inFile = input$file1.bin
-      
     } else if(input$endpt == "Normal") {
-      
       inFile = input$file1.norm
-      
     } else{
-      
       inFile = input$file1.pois
-      
     }
     
-    if (is.null(inFile)) return(NULL)
-    
+    if(is.null(inFile)) return(NULL)
+    if(file_ext(inFile$datapath) != "csv") return("File upload must be .csv extension!")
     dat = read.csv(inFile$datapath, header = input$header)
-    
     dat
-    
   })
   
-  
-  
   # Error checking
-  
   errCheck = function() {
-    
     output$warning.wt = renderText({""})
-    
-    
-    
     if(input$hist_data_option == "Manual") {
-      
       co.data = which_val()$mat
-      
     } else{
-      
       co.data = meta.data()
-      
+      if(class(co.data) == "character") return(co.data)
     }
-    
-    
-    
+
     co.data[,2] = as.numeric(co.data[,2])
-    
     co.data[,3] = as.numeric(co.data[,3])
     
-    
-    
     # Error check historical data
-    
     if(sum(co.data[,1] == "") > 0 | sum(is.na(co.data[,c(2,3)])) > 0) return("Please complete the table of historical trial data.")
-    
     if(sum(co.data[,2] == "") > 0) return("Please complete the table of historical trial data.")
-    
     if(sum(co.data[,3] == "") > 0) return("Please complete the table of historical trial data.")
     
-    
-    
     if(input$endpt == "Binary") {
-      
       if(!is.numeric(input$p0) | input$p0 < 0 | input$p0 > 1){return(HTML("<p> Null value for P(event), one-sample trials must be between 0 and 1. </p>"))}
-      
       if(input$ncrit == "Two" & (!is.numeric(input$qc2_bin) | input$qc2_bin < 0 | input$qc2_bin > 1)){return(HTML("<p> Null value for P(event), one-sample trials must be between 0 and 1. </p>"))}
-      
-      if(input$samp == "Two") {
-        
-        #if(!is.numeric(input$diff0_bin)) {return("Value for null hypothesis difference in two-sample trials must be a number")}
-        
+      if(input$samp == "Two") { 
+       #if(!is.numeric(input$diff0_bin)) {return("Value for null hypothesis difference in two-sample trials must be a number")}
       }
       
       if(sum(co.data[,3]%%1 != 0) > 0) {return("Your 3rd column should contain control arm sample sizes, which are positive integers.") }
